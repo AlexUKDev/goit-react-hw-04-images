@@ -16,7 +16,7 @@ export const FetchData = async (query, page) => {
       page: page,
     },
   };
-  const response = await axios.get('api', optionsRequest);
+  const response = await axios.get('api/', optionsRequest);
 
   // console.log(response);
   return response.data;
