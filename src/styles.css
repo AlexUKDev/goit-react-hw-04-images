@@ -185,9 +185,6 @@ img {
   max-width: calc(100vw - 50px);
   max-height: calc(100vh - 30px);
 }
-.ModalImg{
-  width: 100%;
-}
 
 /*
 * Стили компонента Buton (Load more)

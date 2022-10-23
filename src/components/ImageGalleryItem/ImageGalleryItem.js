@@ -1,15 +1,14 @@
 import { Component } from 'react';
-import { Modal } from '../Modal/Modal';
+import Modal from '../Modal/Modal';
 export class ImageGalleryItem extends Component {
   state = {
-    isOpenModal: false,
+    showModal: false,
   };
 
-  openModal = () => {
-    this.setState({ isOpenModal: true });
-  };
-  closeModal = () => {
-    this.setState({ isOpenModal: false });
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
 
   render() {
@@ -20,13 +19,13 @@ export class ImageGalleryItem extends Component {
           src={webformatURL}
           alt={tags}
           className="ImageGalleryItem-image"
-          onClick={this.openModal}
+          onClick={this.toggleModal}
         />
-        {this.state.isOpenModal && (
+        {this.state.showModal && (
           <Modal
             largeImageURL={largeImageURL}
             tags={tags}
-            closeModal={this.closeModal}
+            closeModal={this.toggleModal}
           />
         )}
       </li>
