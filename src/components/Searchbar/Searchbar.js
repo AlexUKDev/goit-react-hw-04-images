@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { FcSearch } from 'react-icons/fc';
 import { Notify } from 'notiflix';
+import PropTypes from 'prop-types';
 
 export default class Searchbar extends Component {
   state = {
@@ -48,3 +49,7 @@ export default class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  sendSubmitKeyword: PropTypes.func.isRequired,
+};

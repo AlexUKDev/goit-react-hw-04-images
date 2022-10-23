@@ -1,4 +1,5 @@
 import { ThreeDots } from 'react-loader-spinner';
+import PropTypes from 'prop-types';
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 export const Loader = ({ color, size, marginTop }) => {
   return (
@@ -20,4 +21,10 @@ export const Loader = ({ color, size, marginTop }) => {
       visible={true}
     />
   );
+};
+
+Loader.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
+  marginTop: PropTypes.number.isRequired,
 };

@@ -1,4 +1,5 @@
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
+import PropTypes from 'prop-types';
 export const ImageGallery = ({ response }) => {
   return (
     <ul className="ImageGallery">
@@ -12,4 +13,8 @@ export const ImageGallery = ({ response }) => {
       ))}
     </ul>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  response: PropTypes.array,
 };

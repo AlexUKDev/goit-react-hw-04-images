@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import Modal from '../Modal/Modal';
+import PropTypes from 'prop-types';
 export class ImageGalleryItem extends Component {
   state = {
     showModal: false,
@@ -33,4 +34,9 @@ export class ImageGalleryItem extends Component {
   }
 }
 
-//  <Modal largeImageURL={largeImageURL} tags={tags} />
+ImageGalleryItem.propTypes = {
+  key: PropTypes.string.isRequired,
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+};

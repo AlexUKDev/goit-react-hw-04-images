@@ -63,10 +63,7 @@ export default class App extends Component {
     const { isLoading, totalPages } = this.state;
     return (
       <div>
-        <Searchbar
-          sendSubmitKeyword={this.handleKeywordChange}
-          notify={this.notify}
-        />
+        <Searchbar sendSubmitKeyword={this.handleKeywordChange} />
         {!isLoading && <ImageGallery response={this.state.data} />}
         {isLoading && <Loader color={'#4752b1'} size={150} marginTop={100} />}
         {totalPages > 12 && (

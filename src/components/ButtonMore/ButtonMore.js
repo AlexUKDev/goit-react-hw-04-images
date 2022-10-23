@@ -1,5 +1,5 @@
 import { GiClaymoreExplosive } from 'react-icons/gi';
-// import { MdExpandMore } from 'react-icons/md';
+import PropTypes from 'prop-types';
 
 export const ButtonMore = ({ onClick }) => {
   return (
@@ -11,4 +11,8 @@ export const ButtonMore = ({ onClick }) => {
       </button>
     </div>
   );
+};
+
+ButtonMore.propTypes = {
+  onClick: PropTypes.func.isRequired,
 };
