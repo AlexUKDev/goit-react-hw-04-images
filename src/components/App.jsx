@@ -23,13 +23,17 @@ export default class App extends Component {
       // console.log('this.state.keyword: ', keyword);
       // console.log('prevState.keyword: ', prevState.keyword);
       // console.log('Inside if ( !== ) :', keyword !== prevState.keyword);
-      const { totalHits, hits } = await FetchData(keyword, currentPage);
-      this.setState({
-        totalPages: totalHits,
-        data: hits,
-        isLoading: false,
-      });
-      // console.log('totalHits : ', totalHits, 'hits : ', hits);
+      try {
+        const { totalHits, hits } = await FetchData(keyword, currentPage);
+        this.setState({
+          totalPages: totalHits,
+          data: hits,
+          isLoading: false,
+        });
+        // console.log('totalHits : ', totalHits, 'hits : ', hits);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
