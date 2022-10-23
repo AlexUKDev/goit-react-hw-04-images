@@ -13,11 +13,12 @@ export default class Searchbar extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.keyword.trim() === '') {
+    const keyword = this.state.keyword.trim();
+    if (keyword === '') {
       Notify.info('Please enter something and try again');
       return;
     }
-    this.props.sendSubmitKeyword(this.state.keyword);
+    this.props.sendSubmitKeyword(keyword.toLocaleLowerCase());
     this.resetForm();
   };
 

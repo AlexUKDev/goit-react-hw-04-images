@@ -3,6 +3,7 @@ import Searchbar from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { FetchData } from './FetchData/FetchData';
 import { Loader } from './Loader/Loader';
+import { ButtonMore } from './ButtonMore/ButtonMore';
 
 // import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
 
@@ -15,22 +16,37 @@ export default class App extends Component {
     keyword: '',
   };
   componentDidMount() {
-    console.log('Сработала функция componentDidMount');
+    // console.log('Сработала функция componentDidMount');
   }
   async componentDidUpdate(prevProps, prevState) {
-    const { keyword, currentPage } = this.state;
-    if (keyword !== prevState.keyword) {
-      // console.log('this.state.keyword: ', keyword);
-      // console.log('prevState.keyword: ', prevState.keyword);
-      // console.log('Inside if ( !== ) :', keyword !== prevState.keyword);
+    if (prevState.keyword !== this.state.keyword) {
       try {
-        const { totalHits, hits } = await FetchData(keyword, currentPage);
+        const { totalHits, hits } = await FetchData(
+          this.state.keyword,
+          this.state.currentPage
+        );
+
         this.setState({
           totalPages: totalHits,
           data: hits,
           isLoading: false,
         });
-        // console.log('totalHits : ', totalHits, 'hits : ', hits);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (prevState.currentPage !== this.state.currentPage) {
+      try {
+        const { hits } = await FetchData(
+          this.state.keyword,
+          this.state.currentPage
+        );
+
+        this.setState({
+          data: [...this.state.data, ...hits],
+          isLoading: false,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -38,20 +54,25 @@ export default class App extends Component {
   }
 
   handleKeywordChange = keyword => {
-    this.setState({ keyword, isLoading: true });
+    this.setState({ keyword, isLoading: true, currentPage: 1 });
   };
-
+  handleCurrentPageChange = () => {
+    this.setState({ currentPage: this.state.currentPage + 1 });
+  };
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, totalPages } = this.state;
     return (
-      <>
+      <div>
         <Searchbar
           sendSubmitKeyword={this.handleKeywordChange}
           notify={this.notify}
         />
         {!isLoading && <ImageGallery response={this.state.data} />}
         {isLoading && <Loader color={'#4752b1'} size={150} marginTop={100} />}
-      </>
+        {totalPages > 12 && (
+          <ButtonMore onClick={this.handleCurrentPageChange} />
+        )}
+      </div>
     );
   }
 }
