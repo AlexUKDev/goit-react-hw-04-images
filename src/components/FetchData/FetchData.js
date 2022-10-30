@@ -17,20 +17,6 @@ export const FetchData = async (query, page) => {
     },
   };
 
-  // if (controller) {
-  //   optionsRequest = {
-  //     params: {
-  //       q: query,
-  //       key: PIXABAY_API_KEY,
-  //       image_type: 'photo',
-  //       orientation: 'horizontal',
-  //       per_page: 12,
-  //       page: page,
-  //     },
-  //     signal: controller.signal,
-  //   };
-  // }
-
   const response = await axios.get('api/', optionsRequest);
   return response.data;
 };
