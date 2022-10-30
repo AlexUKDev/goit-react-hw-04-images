@@ -1,75 +1,66 @@
-import { Component } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { FetchData } from './FetchData/FetchData';
 import { Loader } from './Loader/Loader';
 import { ButtonMore } from './ButtonMore/ButtonMore';
+import { Notify } from 'notiflix';
 
-// import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
+export const App = () => {
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [keyword, setKeyword] = useState('');
 
-export default class App extends Component {
-  state = {
-    data: [],
-    totalPages: null,
-    currentPage: 1,
-    isLoading: false,
-    keyword: '',
-  };
-  componentDidMount() {
-    // console.log('Сработала функция componentDidMount');
-  }
-  async componentDidUpdate(prevProps, prevState) {
-    if (prevState.keyword !== this.state.keyword) {
-      try {
-        const { totalHits, hits } = await FetchData(
-          this.state.keyword,
-          this.state.currentPage
-        );
-
-        this.setState({
-          totalPages: totalHits,
-          data: hits,
-          isLoading: false,
-        });
-      } catch (error) {
-        console.log(error);
+  const memoizedCallback = useCallback(async () => {
+    try {
+      const { hits } = await FetchData(keyword, currentPage);
+      if (hits.length === 0) {
+        Notify.info('Oops, nothing was found for your query. Try again');
+        return;
       }
+      setData(prevData => [...prevData, ...hits]);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [keyword, currentPage]);
+
+  const handleKeywordChange = async keyword => {
+    setKeyword(keyword);
+    setIsLoading(true);
+    setCurrentPage(1);
+
+    try {
+      const { totalHits, hits } = await FetchData(keyword, 1);
+      console.log(hits);
+      setData(hits);
+      setTotalPages(totalHits);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCurrentPageChange = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  useEffect(() => {
+    if (keyword === '') {
+      return;
     }
 
-    if (prevState.currentPage !== this.state.currentPage) {
-      try {
-        const { hits } = await FetchData(
-          this.state.keyword,
-          this.state.currentPage
-        );
+    memoizedCallback();
+  }, [keyword, currentPage, memoizedCallback]);
 
-        this.setState({
-          data: [...this.state.data, ...hits],
-          isLoading: false,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-
-  handleKeywordChange = keyword => {
-    this.setState({ keyword, isLoading: true, currentPage: 1 });
-  };
-  handleCurrentPageChange = () => {
-    this.setState({ currentPage: this.state.currentPage + 1 });
-  };
-  render() {
-    const { isLoading, totalPages } = this.state;
-    return (
-      <div>
-        <Searchbar sendSubmitKeyword={this.handleKeywordChange} />
-        {!isLoading && <ImageGallery response={this.state.data} />}
-        {isLoading && <Loader color={'#4752b1'} size={150} marginTop={100} />}
-        {totalPages > 12 && (
-          <ButtonMore onClick={this.handleCurrentPageChange} />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Searchbar sendSubmitKeyword={handleKeywordChange} />
+      {!isLoading && <ImageGallery response={data} />}
+      {isLoading && <Loader color={'#4752b1'} size={150} marginTop={100} />}
+      {totalPages > 12 && <ButtonMore onClick={handleCurrentPageChange} />}
+    </div>
+  );
+};

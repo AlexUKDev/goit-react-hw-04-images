@@ -6,7 +6,7 @@ const PIXABAY_API_KEY = '29756284-9fd5906fdaeaa95b8e4b48e13';
 axios.defaults.baseURL = BASE_URL;
 
 export const FetchData = async (query, page) => {
-  const optionsRequest = {
+  let optionsRequest = {
     params: {
       q: query,
       key: PIXABAY_API_KEY,
@@ -16,8 +16,21 @@ export const FetchData = async (query, page) => {
       page: page,
     },
   };
-  const response = await axios.get('api/', optionsRequest);
 
-  // console.log(response);
+  // if (controller) {
+  //   optionsRequest = {
+  //     params: {
+  //       q: query,
+  //       key: PIXABAY_API_KEY,
+  //       image_type: 'photo',
+  //       orientation: 'horizontal',
+  //       per_page: 12,
+  //       page: page,
+  //     },
+  //     signal: controller.signal,
+  //   };
+  // }
+
+  const response = await axios.get('api/', optionsRequest);
   return response.data;
 };
