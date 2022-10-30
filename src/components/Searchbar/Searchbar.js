@@ -1,54 +1,51 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { FcSearch } from 'react-icons/fc';
 import { Notify } from 'notiflix';
 import PropTypes from 'prop-types';
 
-export default class Searchbar extends Component {
-  state = {
-    keyword: '',
+export const Searchbar = ({ sendSubmitKeyword }) => {
+  const [keyword, setKeyword] = useState('');
+
+  const handleKeywordChange = e => {
+    const serchValue = e.currentTarget.value.trim().toLowerCase();
+    setKeyword(serchValue);
   };
 
-  handleKeywordChange = e => {
-    const serchValue = e.currentTarget.value.trim().toLowerCase();
-    this.setState({ keyword: serchValue });
-  };
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    const keyword = this.state.keyword.trim();
-    if (keyword === '') {
+    const keywordNormalize = keyword.trim();
+    if (keywordNormalize === '') {
       Notify.info('Please enter something and try again');
       return;
     }
-    this.props.sendSubmitKeyword(keyword.toLocaleLowerCase());
-    this.resetForm();
+    sendSubmitKeyword(keywordNormalize.toLocaleLowerCase());
+    resetForm();
   };
 
-  resetForm = () => {
-    this.setState({ keyword: '' });
+  const resetForm = () => {
+    setKeyword('');
   };
-  render() {
-    return (
-      <header className="searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button">
-            <FcSearch className="serchIcon" />
-            <span className="SearchFormButton-label">Search</span>
-          </button>
+  return (
+    <header className="searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button">
+          <FcSearch className="serchIcon" />
+          <span className="SearchFormButton-label">Search</span>
+        </button>
 
-          <input
-            className="SearchFormButton-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleKeywordChange}
-            value={this.state.keyword}
-          />
-        </form>
-      </header>
-    );
-  }
-}
+        <input
+          className="SearchFormButton-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleKeywordChange}
+          value={keyword}
+        />
+      </form>
+    </header>
+  );
+};
 
 Searchbar.propTypes = {
   sendSubmitKeyword: PropTypes.func.isRequired,
