@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { FetchData } from './FetchData/FetchData';
@@ -13,34 +13,30 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
 
-  const memoizedCallback = useCallback(async () => {
+  async function getData(keyword, currentPage) {
     try {
-      const { hits } = await FetchData(keyword, currentPage);
+      const { totalHits, hits } = await FetchData(keyword, currentPage);
       if (hits.length === 0) {
+        setData([]);
+        setTotalPages(0);
         Notify.info('Oops, nothing was found for your query. Try again');
         return;
+      } else {
+        setData(prevData => [...prevData, ...hits]);
+        setTotalPages(totalHits);
       }
-      setData(prevData => [...prevData, ...hits]);
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [keyword, currentPage]);
+  }
 
   const handleKeywordChange = async keyword => {
     setKeyword(keyword);
+    setData([]);
     setIsLoading(true);
     setCurrentPage(1);
-
-    try {
-      const { totalHits, hits } = await FetchData(keyword, 1);
-      console.log(hits);
-      setData(hits);
-      setTotalPages(totalHits);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleCurrentPageChange = () => {
@@ -51,9 +47,8 @@ export const App = () => {
     if (keyword === '') {
       return;
     }
-
-    memoizedCallback();
-  }, [keyword, currentPage, memoizedCallback]);
+    getData(keyword, currentPage);
+  }, [keyword, currentPage]);
 
   return (
     <div>
