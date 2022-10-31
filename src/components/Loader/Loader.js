@@ -1,6 +1,6 @@
 import { ThreeDots } from 'react-loader-spinner';
 import PropTypes from 'prop-types';
-// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
 export const Loader = ({ color, size, marginTop }) => {
   return (
     <ThreeDots
