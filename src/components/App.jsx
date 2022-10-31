@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import { FetchData } from './FetchData/FetchData';
+import { FetchPixabayImg } from '../api/FetchPixabayImg';
 import { Loader } from './Loader/Loader';
 import { ButtonMore } from './ButtonMore/ButtonMore';
 import { Notify } from 'notiflix';
@@ -15,7 +15,7 @@ export const App = () => {
 
   async function getData(keyword, currentPage) {
     try {
-      const { totalHits, hits } = await FetchData(keyword, currentPage);
+      const { totalHits, hits } = await FetchPixabayImg(keyword, currentPage);
       if (hits.length === 0) {
         setData([]);
         setTotalPages(0);

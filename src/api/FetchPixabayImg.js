@@ -5,7 +5,7 @@ const PIXABAY_API_KEY = '29756284-9fd5906fdaeaa95b8e4b48e13';
 
 axios.defaults.baseURL = BASE_URL;
 
-export const FetchData = async (query, page) => {
+export const FetchPixabayImg = async (query, page) => {
   let optionsRequest = {
     params: {
       q: query,
